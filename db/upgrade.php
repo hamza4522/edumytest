@@ -95,5 +95,19 @@ function xmldb_theme_edumy_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2020050618, 'theme', 'edumy');
     }
 
+    if ($oldversion < 2022011118.12) {
+
+        $table = new xmldb_table('theme_edumy_courserate');
+        $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, null, null, '0',);
+
+        // Conditionally launch create fiedl
+        if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field, $continue=true, $feedback=true);
+        }
+        upgrade_plugin_savepoint(true, 2022011118.12, 'theme', 'edumy');
+    }
+
+
+
   return $result;
 }

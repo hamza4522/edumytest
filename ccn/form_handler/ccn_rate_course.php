@@ -25,12 +25,18 @@ if (!$context = get_context_instance(CONTEXT_COURSE, $course->id)) {
     global $USER;
 
 if ($form = data_submitted()) {
-    if ($DB->count_records('theme_edumy_courserate', array('course'=>$COURSE->id, 'user'=>$USER->id))) {
-        $test = $DB->get_record('theme_edumy_courserate', array('course'=>$COURSE->id, 'user'=>$USER->id));
+    if ($DB->count_records('theme_edumy_courserate', array('course'=>$COURSE->id, 'userid'=>$USER->id))) {
+        $test = $DB->get_record('theme_edumy_courserate', array('course'=>$COURSE->id, 'userid'=>$USER->id));
         $DB->update_record('theme_edumy_courserate', array('id'=>$test->id, 'rating'=>$rating));
     } else {
 
-    $DB->insert_record( 'theme_edumy_courserate', array('course'=>$COURSE->id, 'user'=>$USER->id, 'rating'=>$rating));
+	    $insert = new \stdClass();
+	    $insert->course = (int) $COURSE->id;
+	    $insert->userid = (int)$USER->id;
+	    $insert->rating = (int)$rating;
+      // print_object($insert);
+      // print_object($DB->get_records('theme_edumy_courserate'));
+      $DB->insert_record('theme_edumy_courserate', $insert, $returnid=true, $bulk=false);
     }
     redirect($CFG->wwwroot.'/course/view.php?id='.$COURSE->id, get_string('rating_success', 'theme_edumy'), null, \core\output\notification::NOTIFY_SUCCESS);
 
